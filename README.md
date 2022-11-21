@@ -28,7 +28,7 @@ A organização desse projeto foi feita através da separação em diversos dire
 
 A seguir temos um fluxograma geral da solução para esse desafio.
 
-![](./docs/figures/fluxograma-geral-trabalho.png)
+![](./ATI_v3.png)
 
 ## Dataset
 

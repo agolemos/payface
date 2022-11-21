@@ -81,7 +81,21 @@ Durante a Análise Exploratória dos Dados foram capturadas cerca de 40 features
 ## Organização do Projeto
 
 ```
-desafio-senai
+Payface
+├── auxiliary_models
+├── data
+├── metric
+├── modeling
+├── modularized_code
+├── preprocessing
+├── user
+├── utils
+├── main_general.py
+├── ATI.png
+├── LICENSE
+├── README.md
+└── requirements.txt
+
 ├── data
 │   ├── database.csv
 │   ├── instances

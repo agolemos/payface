@@ -32,7 +32,7 @@ A seguir temos um fluxograma geral da solução para esse desafio.
 
 ## Dataset
 
-Para executar o projeto é necessário baixar o dataset no [link](https://drive.google.com/u/0/uc?id=17LPP_ZZprHIG3R2f0Vhg5CyfFZOMvlia&export=download) e colocar o arquivo (`database.csv`) na pasta [data](./data/). 
+Para executar o projeto é necessário criar um subdiretório dataset e  baixar o dataset no [link](https://drive.google.com/u/0/uc?id=17LPP_ZZprHIG3R2f0Vhg5CyfFZOMvlia&export=download) e colocar o arquivo (`database.csv`) na pasta [data](./data/). 
 
 :warning: **Nota:** O arquivo `database.csv` possui 1.2 GB, assim não foi disponibilizado no github. 
 

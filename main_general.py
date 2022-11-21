@@ -11,8 +11,8 @@ ops=Ops()
 pp_obj=Preprocessing()
 root_dir = os.getcwd()
 # Load Face Detection Model
-face_cascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
-model_path = './shape_predictor_68_face_landmarks.dat'
+face_cascade = cv2.CascadeClassifier("auxiliary_models/haarcascade_frontalface_default.xml")
+model_path = 'auxiliary_models/shape_predictor_68_face_landmarks.dat'
 
 # Load Anti-Spoofing Model graph
 model =ops.get_model("lbp_model.m")

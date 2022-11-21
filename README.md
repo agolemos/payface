@@ -24,14 +24,6 @@ A organização desse projeto foi feita através da separação em diversos dire
 * **src** -> Pasta contendo os principais códigos-fonte do projeto. [[src](./src/)]
 * **test** -> Pasta contendo os arquivos de teste unitário de software. [[test](./test/)]
 
-## Enunciado do Problema
-
-**Problema:** 
-
-**Desenvolvimento:** 
-
-O enunciado completo do problema pode ser encontrado no [arquivo](./docs/prova_pratica_p2_2021.pdf).
-
 ## Fluxograma Geral da ATI
 
 A seguir temos um fluxograma geral da solução para esse desafio.

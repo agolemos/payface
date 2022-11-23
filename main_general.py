@@ -13,7 +13,6 @@ mp_drawing = mp.solutions.drawing_utils
 model =ops.get_model("lbp_model.m")
 
 # For webcam input:
-cont=0
 cap = cv2.VideoCapture(0)
 tag=0
 
@@ -55,14 +54,14 @@ with mp_face_detection.FaceDetection(
 
             if preds < 0.5:
                 label = 'Nao autorizado'
-                tag=0
+
                 cv2.putText(frame, label[::-1], (x, y - 10),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
                 cv2.rectangle(frame, rect_start_point, rect_end_point,
                               (0, 0, 255), 2)
             else:
                 label = 'Autorizado'
-                tag=1
+
                 cv2.putText(frame, label[::-1], (x, y - 10),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
                 cv2.rectangle(frame, rect_start_point, rect_end_point,

@@ -1,4 +1,6 @@
 import sys
+import cv2
+import os
 
 class Utils:
     
@@ -8,18 +10,49 @@ class Utils:
 
         return
 
-    # Print iterations progress
 
-    def progressbar(self, it, prefix="", size=60, out=sys.stdout):  # Python3.3+
-        count = len(it)
 
-        def show(j):
-            x = int(size * j / count)
-            print("{}[{}{}] {}/{}".format(prefix, "#" * x, "." * (size - x), j, count),
-                  end='\r', file=out, flush=True)
+    def convert_videos_to_images(self, name):
 
-        show(0)
-        for i, item in enumerate(it):
-            yield item
-            show(i + 1)
-        print("\n", flush=True, file=out)
+        # Importing all necessary libraries
+
+        # Read the video from specified path
+        cam = cv2.VideoCapture("C:\\Users\\Admin\\PycharmProjects\\project_1\\openCV.mp4")
+
+        try:
+
+            # creating a folder named data
+            if not os.path.exists('data'):
+                os.makedirs('data')
+
+        # if not created then raise error
+        except OSError:
+            print('Error: Creating directory of data')
+
+        # frame
+        currentframe = 0
+
+        while (True):
+
+            # reading from frame
+            ret, frame = cam.read()
+
+            if ret:
+                # if video is still left continue creating images
+                name = './data/frame' + str(currentframe) + '.jpg'
+                print('Creating...' + name)
+
+                # writing the extracted images
+                cv2.imwrite(name, frame)
+
+                # increasing counter so that it will
+                # show how many frames are created
+                currentframe += 1
+            else:
+                break
+
+        # Release all space and windows once done
+        cam.release()
+        cv2.destroyAllWindows()
+
+        return

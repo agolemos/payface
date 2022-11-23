@@ -28,50 +28,30 @@ A organização desse projeto foi feita através da separação em diversos dire
 
 A seguir temos um fluxograma geral da solução para esse desafio.
 
-![](./docs/figures/fluxograma-geral-trabalho.png)
+![](./ATI_v3.png)
 
 ## Dataset
 
-Para executar o projeto é necessário baixar o dataset no [link](https://drive.google.com/u/0/uc?id=17LPP_ZZprHIG3R2f0Vhg5CyfFZOMvlia&export=download) e colocar o arquivo (`database.csv`) na pasta [data](./data/). 
+Para executar o projeto é necessário criar um subdiretório denominado **dataset** dentro da pasta [data](./data/). Neste subdiretório deve ser inserido as pastas com datasets públicos utilizados pelos sistema para treino e teste. 
 
-:warning: **Nota:** O arquivo `database.csv` possui 1.2 GB, assim não foi disponibilizado no github. 
+O dataset público MSU podem ser encontrado no [link](https://drive.google.com/u/0/uc?id=17LPP_ZZprHIG3R2f0Vhg5CyfFZOMvlia&export=download)
 
-Como forma de facilitar a manipulação de dados e o trabalho o `database.csv` foi quebrado em 167 arquivos menores. Assim, tem-se um arquivo por instância do problema. O script `script-file-split.sh` auxilia nesta tarefa de quebrar a base de dados em várias instâncias. Assim, para executar esse script execute o comando: 
-
-```
-$ ./data/script-file-split.sh
-```
-
-Após esse procedimento cerca de 167 arquivos de instâncias são criados com aproximadamente 7.5 MB cada. As instâncias criadas possue o seguinte padrão no nome `instance-n.csv`, onde n é o número da instância.
-
-:warning: **Nota:** As primeiras 800000 colunas da base de dados indicam a leitura da tensão nas linhas de energia. As últimas 3 colunas da base de dados representam respectivamente o ID do sinal, a fase e o target. No processamento do problema foram removidos as informações ID do sinal e a fase, pois eles não contribuem no problema. 
+:warning: **Nota:** Os datasets possuem um tamanho considerável, assim não foram disponibilizados no github. 
 
 ## Organização Geral da Base de Dados
 
-| Atributo   | Instâncias em Condições de Operação Boas                | Instâncias em Condições de Operação Ruins        |
+| Dataset    | Instâncias em Condições de Operação Boas                | Instâncias em Condições de Operação Ruins        |
 |------------|---------------------------------------------------------|--------------------------------------------------|
-| Quantidade | 156                                                     | 11                                               |
-| Lista      | Todas - [2, 68, 77, 91, 94, 96, 99, 137, 145, 146, 153] | [2, 68, 77, 91, 94, 96, 99, 137, 145, 146, 153]  |
+| MSU        | 156                                                     | 11                                               |
+| UVAD       | Todas - [2, 68, 77, 91, 94, 96, 99, 137, 145, 146, 153] | [2, 68, 77, 91, 94, 96, 99, 137, 145, 146, 153]  |
 
-## Características do Problema
 
-- [x] Problema de classificação
-- [x] Quantidade de classes 2
-- [x] Base de dados contém 167 instâncias diferentes
-- [x] Cada instância possui 3 séries temporais (3 fases)
-- [x] Cada série temporal (fase) contém 800000 dados
-- [x] Cada série temporal é uma onda senoide completa
-- [x] As fases estão deslocadas por 120 graus ou por 800000/3 leituras de dados
-- [x] Quantidade de dados sem descargas parciais (normal): 156
-- [x] Quantidade de dados com descargas parciais (anormal): 11
-- [x] Dataset desbalanceado
-
-## Como Executar o Projeto
+## Como Executar o projeto principal para a leitura de um modelo específico
 
 Para executar esse projeto execute o comando a seguir:
 
 ```
-$ python ./src/code-ai.py
+$ python ./main_general.py -m "lbp_model"
 ```
 
 ## Como Executar os Testes Unitários
@@ -101,7 +81,21 @@ Durante a Análise Exploratória dos Dados foram capturadas cerca de 40 features
 ## Organização do Projeto
 
 ```
-desafio-senai
+Payface
+├── auxiliary_models
+├── data
+├── metric
+├── modeling
+├── modularized_code
+├── preprocessing
+├── user
+├── utils
+├── main_general.py
+├── ATI.png
+├── LICENSE
+├── README.md
+└── requirements.txt
+
 ├── data
 │   ├── database.csv
 │   ├── instances

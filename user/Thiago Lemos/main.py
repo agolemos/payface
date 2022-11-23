@@ -36,8 +36,8 @@ if __name__ == '__main__':
 
 # 4º ETAPA: SELEÇÃO DO MODELO DE CLASSIFICAÇÃO
 
-    classifier = SVC(kernel='rbf', C=1e3, gamma=0.5, class_weight='balanced', probability=True)
-    #classifier = MLPClassifier(random_state=1, max_iter=5000)
+    #classifier = SVC(kernel='rbf', C=1e3, gamma=0.5, class_weight='balanced', probability=True)
+    classifier = MLPClassifier(random_state=1, max_iter=5000)
 
 # 5º ETAPA: TREINO
     model_obj.lbp_train(classifier)

@@ -8,6 +8,7 @@ from sklearn.model_selection import StratifiedKFold
 import pandas as pd
 
 
+
 class Modeling:
     train=''
     test=''
@@ -60,6 +61,7 @@ class Modeling:
         print('Amount of data used for training: {}'.format(len(train_feature)))
         model = classifier
         model.fit(train_feature, train_label)
+
         data_dir = os.path.abspath(os.path.dirname(__file__))
 
         self.ops.save_model(model,"lbp_model.m")
@@ -79,6 +81,7 @@ class Modeling:
         print(cont, len(train_label))
 
         acc, eer, hter = self.m.general_metric(predict_proba, train_label) # DESACOPLAR
+
 
     def lbp_test_online(self,feature):
         return

@@ -2,7 +2,8 @@
 import numpy as np
 from sklearn.metrics import confusion_matrix,roc_curve, auc
 import matplotlib.pyplot as plt
-
+import mlflow
+import mlflow.sklearn
 
 class Metric:
     train=''
@@ -22,6 +23,8 @@ class Metric:
 
         frr = fn / (tp + fn)  # bpcer
         print("APCER :%f BPCER: %f " % (far, frr))
+        mlflow.log_metric("APCER", far)
+        mlflow.log_metric("BPCER", frr)
         hter = (far + frr) / 2  # acer
 
         fpr, tpr, threshold = roc_curve(labels, predict_proba[:, 1])

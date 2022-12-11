@@ -1,58 +1,106 @@
-import sys
+import mediapipe as mp
 import cv2
-import os
+from mediapipe.python.solutions.drawing_utils import _normalized_to_pixel_coordinates
+mp_face_detection = mp.solutions.face_detection
+mp_FaceKeyPoint = mp_face_detection.FaceKeyPoint
+mp_get_key_point = mp_face_detection.get_key_point
+mp_drawing = mp.solutions.drawing_utils
+mp_normalized_to_pixel_coordinates = mp_drawing._normalized_to_pixel_coordinates
 
 class Utils:
     
     dataset=''
 
-    def __init__(self, ):
+    def __init__(self):
 
         return
 
+    def MediaPipeFaceDetection(self,frame):
+        with mp_face_detection.FaceDetection(model_selection=1, min_detection_confidence=1) as face_detection:
+            image_rows, image_cols, _ = frame.shape
+            frame.flags.writeable = False
+            image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            results = face_detection.process(image)
+            if results.detections:
+                detection = results.detections[0]
+                location = detection.location_data
+                relative_bounding_box = location.relative_bounding_box
+                rect_start_point = _normalized_to_pixel_coordinates(relative_bounding_box.xmin, relative_bounding_box.ymin,
+                                                                    image_cols, image_rows)
+                rect_end_point = _normalized_to_pixel_coordinates(relative_bounding_box.xmin + relative_bounding_box.width,
+                                                                  relative_bounding_box.ymin + relative_bounding_box.height,
+                                                                  image_cols, image_rows)
+
+            return rect_start_point, rect_end_point
 
 
-    def convert_videos_to_images(self, name):
 
-        # Importing all necessary libraries
+    def detect_faces(self,img):
 
-        # Read the video from specified path
-        cam = cv2.VideoCapture("C:\\Users\\Admin\\PycharmProjects\\project_1\\openCV.mp4")
+        img_height, img_width = img.shape[:2]
+        faces = list()
+        with mp_face_detection.FaceDetection(
+                # model_selection=0,    #NOTE: this attribute doesn't exist, for some reason
+                min_detection_confidence=0.5
+        ) as face_detection:
+            results = face_detection.process(img)
+            for detection in results.detections:
+                location = detection.location_data
+                relative_bounding_box = location.relative_bounding_box
+                rel_x = relative_bounding_box.xmin
+                rel_y = relative_bounding_box.ymin
+                x, y = mp_normalized_to_pixel_coordinates(rel_x, rel_y, img_width, img_height)
+                rel_w = relative_bounding_box.width
+                rel_h = relative_bounding_box.height
+                w, h = mp_normalized_to_pixel_coordinates(rel_w, rel_h, img_width, img_height)
+                faces.append((x, y, w, h))
+        return faces
 
-        try:
+    def select_largest_central_face(self,faces, img_height, img_width):
+        def size_of_bounding_box(w, h):
+            return w * h
 
-            # creating a folder named data
-            if not os.path.exists('data'):
-                os.makedirs('data')
+        def distance_to_center(coord, length):
+            normalized = coord / length
+            return 1 - 2 * abs(normalized - 0.5)  # 1: center, 0: corner
 
-        # if not created then raise error
-        except OSError:
-            print('Error: Creating directory of data')
+        def sorting_logic(key):
+            x, y, w, h = key
+            size = size_of_bounding_box(w, h)
+            d_x = distance_to_center(x, img_width)
+            d_y = distance_to_center(y, img_height)
+            return size, -(d_x * d_y)
 
-        # frame
-        currentframe = 0
+        # Return the largest central face detected
+        faces = sorted(faces, key=sorting_logic, reverse=True)
+        x, y, w, h = faces[0]
+        return x, y, w, h
 
-        while (True):
+    def expand_bounding_box(self, detection, resolution):
+        x, y, w, h = detection
+        min_width, min_height = resolution
+        if h < min_height:
+            y = max(y - (min_height - h) // 2, 0)
+            h = min_height
+        if w < min_width:
+            x = max(x - (min_width - w) // 2, 0)
+            w = min_width
+        return x, y, w, h
 
-            # reading from frame
-            ret, frame = cam.read()
+    # FACE DETECTION: HIGH-ORDER LOGIC ########################################################
+    def detect_face(self,img):
+        img_height, img_width = img.shape[:2]
+        # use a pre-trained model to detect faces
+        faces = self.detect_faces(img)
+        # handle case that more than one face is detected
+        x, y, w, h = self.select_largest_central_face(faces, img_height, img_width)
+        return x, y, w, h
 
-            if ret:
-                # if video is still left continue creating images
-                name = './data/frame' + str(currentframe) + '.jpg'
-                print('Creating...' + name)
-
-                # writing the extracted images
-                cv2.imwrite(name, frame)
-
-                # increasing counter so that it will
-                # show how many frames are created
-                currentframe += 1
-            else:
-                break
-
-        # Release all space and windows once done
-        cam.release()
-        cv2.destroyAllWindows()
-
-        return
+    def crop_face(self,img, detection, resolution=None):
+        x, y, w, h = detection
+        # if resolution is non-null, adjust the bounding box
+        if resolution is not None:
+            assert all(_min <= _avail for _min, _avail in zip(resolution, img.shape))
+            x, y, w, h = self.expand_bounding_box(detection, resolution)
+        # crop
+        return img[y:y + h, x:x + w]

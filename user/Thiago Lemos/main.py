@@ -6,6 +6,8 @@ from modeling.modeling import Modeling
 from sklearn.svm import SVC
 from sklearn.neural_network import MLPClassifier
 import numpy as np
+import mlflow
+import mlflow.sklearn
 import warnings
 warnings.filterwarnings("ignore")
 import os
@@ -38,9 +40,15 @@ if __name__ == '__main__':
 
     #classifier = SVC(kernel='rbf', C=1e3, gamma=0.5, class_weight='balanced', probability=True)
     classifier = MLPClassifier(random_state=1, max_iter=5000)
+    classifier_name="log_mlp"
 
 # 5º ETAPA: TREINO
-    model_obj.lbp_train(classifier)
+    mlflow.set_experiment("LBP_EXPERIMENT")
+    with mlflow.start_run():
+        model_obj.lbp_train(classifier)
+        mlflow.sklearn.log_model(classifier,classifier_name)
+        print("Model run: ",mlflow.active_run().info.run_uuid)
+    mlflow.end_run()
 
 # 6º ETAPA: TESTE
     model_obj.lbp_test()

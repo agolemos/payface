@@ -22,5 +22,8 @@ class Ops:
         model = joblib.load(os.path.join(self.data_dir, name))
         return model
 
+    def get_model_path(self,name):
+        path=os.path.join(self.data_dir, name)
+        return path
 
     

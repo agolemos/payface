@@ -10,7 +10,7 @@ from skimage import feature as skif
 import cv2
 import time
 from utils.utils import Utils
-import pyprind
+#import pyprind
 import sys
 import time
 

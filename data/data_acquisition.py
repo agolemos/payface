@@ -1,16 +1,25 @@
+#import sys
+#sys.path.insert(0, '/home/ec2-user/environment/payface')
 import matplotlib.pyplot as plt
-import cv2
+#import cv2
 import glob
-import os
 
+import os
 import pandas as pd
 import splitfolders
 import shutil
 import numpy as np
 from keras.preprocessing.image import ImageDataGenerator
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+import numpy as np
+import boto3
+from utils.utils import Utils 
+import io
 
 
 class Acquisition:
+    
     data_dir = os.path.abspath(os.path.dirname(__file__))
     user_dir = os.getcwd()
     name_dataset=''
@@ -23,9 +32,12 @@ class Acquisition:
 
 
     def __init__(self, name_dataset):
+        utils=Utils()
+        r=utils.read_image_from_s3('MSU-MFSD/labeled-imgs/ipad/attack_client001_android_SD_ipad_video_scene01-00015.png')
+        print(r)
 
         self.name_dataset=name_dataset
-        if self.name_dataset == 'MSU':
+        if self.name_dataset == 'MSU-MFSD':
             self.data_dir = os.path.join(self.data_dir, 'dataset/dataset-msu-imgs/')
         self.path = os.path.join(self.user_dir, 'data_user')
         self.raw_dir = os.path.join(self.path, self.name_dataset, 'Raw')

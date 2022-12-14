@@ -1,5 +1,9 @@
 
 
+import sys
+import os
+sys.path.insert(0, '/home/ec2-user/environment/payface')
+#print(os.getcwd())
 from data.data_acquisition import Acquisition
 from preprocessing.data_preprocessing import Preprocessing
 from modeling.modeling import Modeling
@@ -10,10 +14,8 @@ import mlflow
 import mlflow.sklearn
 import warnings
 warnings.filterwarnings("ignore")
-import os
-import sys
-sys.path.append(os.getcwd())
-print(os.getcwd())
+
+
 
 if __name__ == '__main__':
 

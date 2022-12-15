@@ -14,6 +14,7 @@ import mlflow
 import mlflow.sklearn
 import warnings
 warnings.filterwarnings("ignore")
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 
 
@@ -22,8 +23,9 @@ if __name__ == '__main__':
 
 # 1º ETAPA: AQUISIÇÃO DO DATASET
 
-    msu_obj=Acquisition('MSU')
+    msu_obj=Acquisition('MSU-MFSD')
     #msu_obj.get_videos_img()
+    print('OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO')
 
 # 2º ETAPA: PRE-PROCESSAMENTO DO DATASET
 

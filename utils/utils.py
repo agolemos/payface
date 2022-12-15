@@ -1,5 +1,6 @@
 import mediapipe as mp
 import cv2
+import os
 from PIL import Image
 from io import BytesIO
 import numpy as np
@@ -12,6 +13,45 @@ mp_get_key_point = mp_face_detection.get_key_point
 mp_drawing = mp.solutions.drawing_utils
 mp_normalized_to_pixel_coordinates = mp_drawing._normalized_to_pixel_coordinates
 
+
+
+class AWS_Utils:
+    s3=''
+    bucket=''
+    cont=0
+    region_name=''
+    
+    def __init__(self,bucket='payface-datasets', region_name='us-east-1' ):
+        self.s3 = boto3.resource('s3', region_name)
+        self.bucket = self.s3.Bucket(bucket)
+        self.region_name=region_name
+        return
+    
+    
+    def get_names_s3(self, name_folder, bucket='payface-datasets', region_name='us-east-1'):
+        
+        folder = name_folder
+        files_in_s3 = [f.key.split(folder + "/")[1] for f in self.bucket.objects.filter(Prefix=folder).all()]
+        return files_in_s3
+    
+    def read_image_from_s3(self, key, bucket='payface-datasets', region_name='us-east-1'):
+   
+        object = self.bucket.Object(key)
+        response = object.get()
+        file_stream = response['Body']
+        im = Image.open(file_stream)
+        return np.array(im)
+    
+    def write_image_to_s3(self,img_array, key, bucket='payface-datasets', region_name='us-east-1'):
+       
+        object = self.bucket.Object(key)
+        file_stream = BytesIO()
+        im = Image.fromarray(img_array)
+        im.save(file_stream, format='jpeg')
+        object.put(Body=file_stream.getvalue())
+    
+    
+
 class Utils:
     
     dataset=''
@@ -20,32 +60,11 @@ class Utils:
 
         return
     
+    
+    
 
 
-    def read_image_from_s3(self, key, bucket='payface-datasets', region_name='us-east-1'):
     
-        s3 = boto3.resource('s3', region_name='us-east-1')
-        
-        bucket = s3.Bucket(bucket)
-        object = bucket.Object(key)
-        print('*******************************')
-        print(object)
-        print("*******************************")
-        response = object.get()
-        file_stream = response['Body']
-        im = Image.open(file_stream)
-        return np.array(im)
-    
-    def write_image_to_s3(self,img_array, key, bucket='payface-datasets', region_name='us-east-1'):
-       
-        s3 = boto3.resource('s3', region_name)
-        
-        bucket = s3.Bucket(bucket)
-        object = bucket.Object(key)
-        file_stream = BytesIO()
-        im = Image.fromarray(img_array)
-        im.save(file_stream, format='jpeg')
-        object.put(Body=file_stream.getvalue())
 
     def MediaPipeFaceDetection(self,frame):
         with mp_face_detection.FaceDetection(model_selection=1, min_detection_confidence=1) as face_detection:

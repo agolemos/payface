@@ -13,13 +13,18 @@ from utils.utils import Utils
 #import pyprind
 import sys
 import time
+from utils.utils import AWS_Utils 
+
+
 
 
 
 class Preprocessing:
+    utils=''
 
 
     def __init__(self):
+        self.utils=AWS_Utils()
 
         return
 
@@ -60,12 +65,17 @@ class Preprocessing:
     def lbp_features(self, dataset):
         print('########## Extracting features (Loading) ###############')
         feature_label = []
+        cont=0
 
         for index, line in dataset.df.iterrows():
             image_path = line['path']
             label = line['target']
             #print(index,label)
-            image = cv2.imread(image_path)
+            #image = cv2.imread(image_path)
+            
+            cont+=1
+            image = self.utils.read_image_from_s3(image_path)
+            
             image = cv2.cvtColor(image, cv2.COLOR_BGR2YCrCb)
             y_h = self.lbp_histogram(image[:, :, 0])  # y channel
             cb_h = self.lbp_histogram(image[:, :, 1])  # cb channel
